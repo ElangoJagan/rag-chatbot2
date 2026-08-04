@@ -37,4 +37,37 @@ class SemanticChunker:
             chunks.append(current)
         return chunks
     
-    def _merge_small_chunks(self,raw_chunks)
+    def _merge_small_chunks(self,raw_chunks):
+        if not raw_chunks:
+            return raw_chunks
+        merged = []
+        for text in raw_chunks:
+            if merged and len(text.strip())<self.max_chunk_size:
+                merged[-1] = f'{merged[-1]}\n{text}'.strip()
+            else:
+                merged.append(text)
+        if len(merged)>1 and len(merged[0].strip())<self.min_chunk_size:
+            merged[1] = f'{merged[0]}\n{merged[1]}'.strip()
+            merged = merged[1:]
+        return merged
+    
+    def chunk_document(self,doc):
+        paragraphs = self._split_paragraphs(doc.text)
+        raw_chunks = self._pack_paragraphs(paragraphs)
+        raw_chunks = self._merge_small_chunks(raw_chunks)
+        
+        chunks = []
+        for i , text in enumerate(raw_chunks):
+            if not text.strip():
+                continue
+            chunks.append(Chunk(
+                chunk_id = f'{doc.doc_id}_{i}',
+                doc_id = doc.doc_id,
+                text = text.strip(),
+                chunk_index = i,
+                source = doc.source,
+                metadata = doc.metadata
+            ))
+        return chunks 
+    
+        
