@@ -1,6 +1,7 @@
 from src.ingestion.file_loader import FileLoader
 from src.processing.chunking import SemanticChunker
 from src.embeddings.embedder import Embedder, FAISSVectorStore
+from src.retrieval.hybrid_retriever import HybridRetriever
 
 
 loader = FileLoader('data/raw')
@@ -30,6 +31,15 @@ print(f'query emb {query_emb_1}')
 query_emb= embedder.embed([query])[0]
 results = store.search(query_emb, top_k =3)
 
+
+
+retriever = HybridRetriever(store, embedder, all_chunks)
+results = retriever.retrieve("How many vacation days do employees get?", top_k=3)
+
 for chunk , score in results:
     print(f"\nScore: {score:.3f}")
     print(f'text : {chunk.text[:150]}')
+
+results = retriever.retrieve("What is the capital of France?", top_k=3)
+for chunk, score in results:
+    print(f"Score: {score:.3f}")
