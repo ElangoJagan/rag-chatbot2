@@ -1,0 +1,23 @@
+[
+    {
+        "question": "How many vacation days do employees get after 11 years?",
+        "expected_keywords": ["20"],
+        "should_be_answerable": true
+
+    },
+    {
+    "question": "Who pays for workers' compensation insurance?",
+    "expected_keywords": ["company"],
+    "should_be_answerable": true
+    },
+    {
+        "question": "What is the capital of France?",
+        "expected_keywords": [],
+        "should_be_answerable": false
+    },
+    {
+        "question": "What is the largest planet in the solar system?",
+        "expected_keywords": [],
+        "should_be_answerable": false
+    }
+]
